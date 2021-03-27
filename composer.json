@@ -1,0 +1,26 @@
+{
+  "name": "aurora02",
+  "description": "phone call",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "jac",
+      "email": "lu7766lu7766@gmail.com"
+    }
+  ],
+  "require": {
+    "voku/anti-xss": "^4.1",
+    "symfony/dotenv": "3.4.15"
+  },
+  "autoload": {
+    "classmap": [
+      "swop/comm",
+      "swop/library"
+    ],
+    "files": [
+      "swop/setting/config.php",
+      "swop/setting/menu2.php"
+    ]
+  }
+}

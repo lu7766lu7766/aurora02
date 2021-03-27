@@ -1,0 +1,10 @@
+/install
+/download
+/.idea
+node_modules
+test*.*
+.iml
+.xml
+.env
+vendor
+env.json
