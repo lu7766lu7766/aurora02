@@ -10,18 +10,18 @@ class ExtensionInfo_Model extends JModel
 	 * 新增分機
 	 * @return $this|void
 	 */
-	public function postExtension ()
+	public function postExtension()
 	{
 		$dba = $this->dba;
-		$this->extensionNos = ( empty( $this->extensionNos ) || $this->extensionNos < $this->extensionNo ) ?
+		$this->extensionNos = (empty($this->extensionNos) || $this->extensionNos < $this->extensionNo) ?
 			$this->extensionNo : $this->extensionNos;
 
 		$tmp_extensionNo = $this->extensionNo;
-		$exists_extensionNo = [ ];
+		$exists_extensionNo = [];
 
 		$sql = "insert into CustomerLists (CustomerNO,UserID,ExtensionNo,UserName,ExtName,OffNetCli,CustomerPwd) values ";
 
-		$params = [ ];
+		$params = [];
 
 		while ($tmp_extensionNo <= $this->extensionNos) {
 			$exists_extensionNo[] = "'$tmp_extensionNo'";
@@ -40,9 +40,9 @@ class ExtensionInfo_Model extends JModel
 		//////////////////////////////////
 		$sql1 = "select CustomerNO from CustomerLists where CustomerNO in (" . join(",", $exists_extensionNo) . ")";
 		$result = $dba->getAll($sql1);
-		$exists_extensionNo = [ ];
+		$exists_extensionNo = [];
 		foreach ($result as $val)
-			$exists_extensionNo[] = $val[ "CustomerNO" ];
+			$exists_extensionNo[] = $val["CustomerNO"];
 
 		if (count($result) > 0) {
 			$this->warning = join(",", $exists_extensionNo) . "分機已存在，請避開這些分機";
@@ -58,7 +58,7 @@ class ExtensionInfo_Model extends JModel
             insert into ExtensionGroup (UserID,CalloutGroupID,CustomerNO)
             values
         ";
-		$params = [ ];
+		$params = [];
 		while ($tmp_extensionNo <= $this->extensionNos) {
 			$sql .= "(?,?,?),";
 			$params[] = $this->userId;
@@ -75,11 +75,11 @@ class ExtensionInfo_Model extends JModel
 	 * 刪除分機
 	 * @return $this|void
 	 */
-	public function deleteExtension ()
+	public function deleteExtension()
 	{
 		$dba = $this->dba;
 		$sql = "";
-		$params = [ ];
+		$params = [];
 		foreach ($this->delete as $delete) {
 			$params = array_merge($params, explode(",", $delete), explode(",", $delete));
 			$sql .= "
@@ -102,12 +102,12 @@ class ExtensionInfo_Model extends JModel
 	 * 分機管理
 	 * @return $this|void
 	 */
-	public function getExtensionManage ()
+	public function getExtensionManage()
 	{
-		$emps = [ $this->session[ "choice" ] ];
-		$sub_emp = $this->getSubEmp($this->session[ "choice" ]);
+		$emps = [$this->session["choice"]];
+		$sub_emp = $this->getSubEmp($this->session["choice"]);
 		foreach ($sub_emp as $user) {
-			$emps[] = $user[ "UserID" ];
+			$emps[] = $user["UserID"];
 		}
 
 		$page = $this->page = $this->page ?? 0;
@@ -133,28 +133,28 @@ class ExtensionInfo_Model extends JModel
 			->leftJoin('RegisteredLogs as c', 'a.ExtensionNo=c.CustomerNO')
 			->whereIn('a.UserID', $emps);
 
-		if (!empty( $this->search_userID )) {
+		if (!empty($this->search_userID)) {
 			$db->andWhere('UserID', $this->search_userID);
 			$db2->andWhere('a.UserID', $this->search_userID);
 		}
 
-		if (!empty( $this->search_content )) {
+		if (!empty($this->search_content)) {
 			$db->andWhere(function ($mdb) {
 				return $mdb->where([
-					[ 'UserID', $this->search_content ],
-					[ 'ExtensionNo', $this->search_content ]
-				], SQL:: OR);
+					['UserID', $this->search_content],
+					['ExtensionNo', $this->search_content]
+				], SQL::OR);
 			});
 
 			$db2->andWhere(function ($mdb) {
 				return $mdb->where([
-					[ 'a.UserID', $this->search_content ],
-					[ 'a.ExtensionNo', $this->search_content ]
-				], SQL:: OR);
+					['a.UserID', $this->search_content],
+					['a.ExtensionNo', $this->search_content]
+				], SQL::OR);
 			});
 		}
 
-		$this->rows = $db->get()[ 0 ][ 'count' ];
+		$this->rows = $db->get()[0]['count'];
 		$this->last_page = ceil($this->rows / $per_page);
 		$db2->orderBy('a.UserID')->limit($offset, $limit);
 		$this->data = $db2->get();
@@ -164,7 +164,7 @@ class ExtensionInfo_Model extends JModel
 	 * 分機修改
 	 * @return $this|void
 	 */
-	public function getExtensionDetail ()
+	public function getExtensionDetail()
 	{
 		$dba = $this->dba;
 		$userId = $this->userId;
@@ -175,7 +175,7 @@ class ExtensionInfo_Model extends JModel
             left join ExtensionGroup as b WITH (NOLOCK) on a.UserID=b.UserID and a.CustomerNO=b.CustomerNO
             where a.UserID=? and a.ExtensionNo=?
         ";
-		$params = [ $userId, $extensionNo ];
+		$params = [$userId, $extensionNo];
 		$stmt = $dba->query($sql, $params);
 		$this->data = $dba->fetch_assoc($stmt);
 	}
@@ -184,25 +184,25 @@ class ExtensionInfo_Model extends JModel
 	 * 分機更新
 	 * @return $this|void
 	 */
-	public function updateExtensionDetail ()
+	public function updateExtensionDetail()
 	{
 		$dba = $this->dba;
 		$userId = $this->userId;
 		$extensionNo = $this->extensionNo;
 
-//        if($this->session["choice"]!="root"){
-//            $sql = "select UseState from CustomerLists WITH (NOLOCK) where UserID=? and ExtensionNo=?;";
-//            $params = array($userId,$extensionNo);
-//            $this->useState = $dba->getAll($sql,$params)[0]["UseState"];
-//        }
-		if ($this->session[ "choice" ] != "root") {
+		//        if($this->session["choice"]!="root"){
+		//            $sql = "select UseState from CustomerLists WITH (NOLOCK) where UserID=? and ExtensionNo=?;";
+		//            $params = array($userId,$extensionNo);
+		//            $this->useState = $dba->getAll($sql,$params)[0]["UseState"];
+		//        }
+		if ($this->session["choice"] != "root") {
 			$sql = "
                 select OffNetCli
                 from CustomerLists WITH (NOLOCK)
                 where UserID=? and ExtensionNo=?
             ";
-			$params = [ $userId, $extensionNo ];
-			$this->offNetCli = $dba->getAll($sql, $params)[ 0 ][ OffNetCli ];
+			$params = [$userId, $extensionNo];
+			$this->offNetCli = $dba->getAll($sql, $params)[0]["OffNetCli"];
 		}
 
 
@@ -222,9 +222,9 @@ class ExtensionInfo_Model extends JModel
 		$params = [
 			$this->extName,
 			$this->customerPwd,
-			$this->startRecorder??0,
-			$this->suspend??1,
-			$this->useState??0,
+			$this->startRecorder ?? 0,
+			$this->suspend ?? 1,
+			$this->useState ?? 0,
 			$this->offNetCli,
 
 			$userId, $extensionNo,
@@ -235,25 +235,24 @@ class ExtensionInfo_Model extends JModel
 		];
 
 		return $dba->exec($sql, $params);
-
 	}
 
 	/**
 	 * 座息策略 (已屏蔽)
 	 * @return $this|void
 	 */
-	public function getSeatTactics ()
+	public function getSeatTactics()
 	{
 		$dba = $this->dba;
 
 		$where = "where";
 
-		if (!empty( $this->userId )) {
+		if (!empty($this->userId)) {
 			$where .= " a.UserID=?  and";
 			$params[] = $this->userId;
 		}
 
-		if (!empty( $this->calloutGroupId )) {
+		if (!empty($this->calloutGroupId)) {
 			$where .= " b.CalloutGroupID=?  and";
 			$params[] = $this->calloutGroupId;
 		}
@@ -268,5 +267,3 @@ class ExtensionInfo_Model extends JModel
 		$this->data = $dba->getAll($sql, $params);
 	}
 }
-
-?>

@@ -9,20 +9,20 @@ class ExtensionInfo_Controller extends JController
     public function addExtension()
     {
         $model = $this->model;
-        if($model->submit)
-        {
+        if ($model->submit) {
             $rs = $model->postExtension();
-            if($rs)
+            if ($rs)
                 parent::redirect("extensionInfo/extensionManage");
         }
 
-        $model->empSelect2 = EmpHelper::getEmpSelect($model->empSelect,
-            array("selected"=>$model->userId,"option"=>array("value"=>"","name"=>"")));
+        $model->empSelect2 = EmpHelper::getEmpSelect(
+            $model->empSelect,
+            array("selected" => $model->userId, "option" => array("value" => "", "name" => ""))
+        );
 
         $model->tmpPwd = "";
-        while(strlen($model->tmpPwd)<10)
-        {
-            $model->tmpPwd .= rand(0,9);
+        while (strlen($model->tmpPwd) < 10) {
+            $model->tmpPwd .= rand(0, 9);
         }
         return parent::render();
     }
@@ -35,23 +35,29 @@ class ExtensionInfo_Controller extends JController
     {
         $model = $this->model;
 
-        if($model->submit && $model->status=="delete")
-        {
+        if ($model->submit && $model->status == "delete") {
             $model->deleteExtension();
         }
 
-        $model->empSelect2 = EmpHelper::getEmpSelect($model->empSelect,
+        $model->empSelect2 = EmpHelper::getEmpSelect(
+            $model->empSelect,
             array(
-                "selected"=>$model->search_userID,
-                "option"=>array("value"=>"","name"=>""),
-                "name"=>"search_userID"
-            ));
+                "selected" => $model->search_userID,
+                "option" => array("value" => "", "name" => ""),
+                "name" => "search_userID"
+            )
+        );
 
         $model->getExtensionManage();
 
-        $model->pageSelect = PageHelper::getPageSelect($model->page,$model->last_page);
+        $model->pageSelect = PageHelper::getPageSelect($model->page, $model->last_page);
 
         return parent::render();
+    }
+
+    public function downloadExtensionVoice()
+    {
+        $this->downloadFile(\lib\VoiceRecord::getExtensionNoCurrentPath($this->model->extensionNo));
     }
 
     /**
@@ -63,22 +69,20 @@ class ExtensionInfo_Controller extends JController
         $model = $this->model;
         $this->menu->currentName = "分機設定變更";
 
-        if($model->submit)
-        {
+        if ($model->submit) {
             $rs = $model->updateExtensionDetail();
             $url = "extensionInfo/extensionManage";
-            $url .= !empty($model->search_userID)? "/search_userID/{$model->search_userID}": "";
-            $url .= !empty($model->search_content)? "/search_content/{$model->search_content}": "";
-            if($rs){
+            $url .= !empty($model->search_userID) ? "/search_userID/{$model->search_userID}" : "";
+            $url .= !empty($model->search_content) ? "/search_content/{$model->search_content}" : "";
+            if ($rs) {
                 parent::redirect($url);
             }
         }
         $model->getExtensionDetail();
-        $model->calloutGroupIdSelect = array("id"=>"calloutGroupId","name"=>"calloutGroupId","class"=>"form-control","option"=>array(),"selected"=>$model->data["CalloutGroupID"]);
+        $model->calloutGroupIdSelect = array("id" => "calloutGroupId", "name" => "calloutGroupId", "class" => "form-control", "option" => array(), "selected" => $model->data["CalloutGroupID"]);
         $i = 1;
-        while($i<=5)
-        {
-            $model->calloutGroupIdSelect["option"][] = array("value" => $i,"name"  => $i++);
+        while ($i <= 5) {
+            $model->calloutGroupIdSelect["option"][] = array("value" => $i, "name"  => $i++);
         }
         return parent::render();
     }
@@ -93,12 +97,11 @@ class ExtensionInfo_Controller extends JController
 
         $model->getSeatTactics();
 
-        $model->empSelect2 = EmpHelper::getEmpSelect($model->empSelect,
-            array("selected"=>$model->userId,"option"=>array("value"=>"","name"=>"")));
+        $model->empSelect2 = EmpHelper::getEmpSelect(
+            $model->empSelect,
+            array("selected" => $model->userId, "option" => array("value" => "", "name" => ""))
+        );
 
         return parent::render();
     }
-
 }
-
-?>

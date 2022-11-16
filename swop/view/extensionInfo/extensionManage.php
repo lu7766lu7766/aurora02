@@ -9,26 +9,25 @@ $can_switch_extension = $choice_id === "root" || $model->session["choicer"]["Can
 <!--<input id="switch" class="bootstrap-switch" type="checkbox" checked data-size="mini" data-off-color="danger">-->
 
 <div class="table-responsive">
-    <?php
-    echo Html::form();
-    echo Html::pageInput($model->page, $model->last_page, $model->per_page);
-    ?>
+  <?php
+  echo Html::form();
+  echo Html::pageInput($model->page, $model->last_page, $model->per_page);
+  ?>
   <table class="table table-v table-condensed">
     <tbody>
-    <tr>
-      <td class="col-md-2">用戶:</td>
-      <td class="col-md-4">
+      <tr>
+        <td class="col-md-2">用戶:</td>
+        <td class="col-md-4">
           <?php echo Html::selector($model->empSelect2); ?>
-      </td>
-      <td class="col-md-2">查詢內容:</td>
-      <td class="col-md-3">
-        <input type="text" name="search_content" class="form-control num-only"
-               value="<?php echo ($model->search_content == "*") ? "" : ($model->search_content) ?>">
-      </td>
-      <td class="non col-md-1">
-        <input type="button" class="form-control btn btn-primary get_btn" value="列表"/>
-      </td>
-    </tr>
+        </td>
+        <td class="col-md-2">查詢內容:</td>
+        <td class="col-md-3">
+          <input type="text" name="search_content" class="form-control num-only" value="<?php echo ($model->search_content == "*") ? "" : ($model->search_content) ?>">
+        </td>
+        <td class="non col-md-1">
+          <input type="button" class="form-control btn btn-primary get_btn" value="列表" />
+        </td>
+      </tr>
     </tbody>
   </table>
 
@@ -41,16 +40,16 @@ $can_switch_extension = $choice_id === "root" || $model->session["choicer"]["Can
     <li><a href="#">(共<?php echo $model->last_page ?>頁，<?php echo $model->rows ?>筆資料)</a></li>
   </ul>
 
-    <?php if (count($model->data)) { ?>
-      <input type="button" class="btn btn-danger delete_btn" value="Delete">
-      <table class="table table-h table-striped table-hover table-pointer">
-        <tbody>
+  <?php if (count($model->data)) { ?>
+    <input type="button" class="btn btn-danger delete_btn" value="Delete">
+    <table class="table table-h table-striped table-hover table-pointer">
+      <tbody>
         <tr>
-            <?php if ($choice_id == "root") { ?>
-              <th>
-                <input type='checkbox' class="checkAll" for="delete[]"/>
-              </th>
-            <?php } ?>
+          <?php if ($choice_id == "root") { ?>
+            <th>
+              <input type='checkbox' class="checkAll" for="delete[]" />
+            </th>
+          <?php } ?>
           <th>編號</th>
           <th>用戶</th>
           <th>分機</th>
@@ -61,67 +60,82 @@ $can_switch_extension = $choice_id === "root" || $model->session["choicer"]["Can
           <th>座席</th>
           <th>狀態</th>
           <th>註冊</th>
-            <?php if ($can_switch_extension) { ?>
-              <th>啟用</th>
-            <?php } ?>
+          <?php if ($can_switch_extension) { ?>
+            <th>啟用</th>
+          <?php } ?>
           <th>Ping</th>
+          <th>語音下載</th>
         </tr>
         <?php
         $i = $model->page * $model->per_page + 1;
         foreach ($model->data as $index => $data) {
 
-            $userId = $data["UserID"];
-            $extensionNo = $data["ExtensionNo"];
-            $ip = (!empty($data["Received"])) ? $data["Received"] : $data["HostInfo"];
-            $url = "extensionInfo/extensionModify?userId={$userId}&extensionNo={$extensionNo}";
-            $url .= (!empty($model->search_userID) ? "&search_userID={$model->search_userID}" : "");
-            $url .= (!empty($model->search_content) ? "&search_content={$model->search_content}" : "");
-            if ($userId != $choice_id && $tmp_user_id != $userId) {
-                $tmp_user_id = $userId;
-                echo "
+          $userId = $data["UserID"];
+          $extensionNo = $data["ExtensionNo"];
+          $filePath = \lib\VoiceRecord::getExtensionNoCurrentPath($extensionNo);
+          $ip = (!empty($data["Received"])) ? $data["Received"] : $data["HostInfo"];
+          $url = "extensionInfo/extensionModify?userId={$userId}&extensionNo={$extensionNo}";
+          $url .= (!empty($model->search_userID) ? "&search_userID={$model->search_userID}" : "");
+          $url .= (!empty($model->search_content) ? "&search_content={$model->search_content}" : "");
+          if ($userId != $choice_id && $tmp_user_id != $userId) {
+            $tmp_user_id = $userId;
+            echo "
 					<tr style='background-color: #111'>
 						<td colspan='20' style='padding:0px; height:5px'>
 						</td>
 					</tr>";
-            }
-            echo "<tr redirect='{$url}'>";//
-            if ($choice_id == "root") {
-                echo "<td><input type='checkbox' name='delete[]' value='{$userId},{$extensionNo}'/></td>";
-            }
-            echo "<td>" . $i++ . "</td>";
-            echo "<td>{$userId}</td>";//用戶
-            echo "<td>{$extensionNo}</td>";//分機
-            echo "<td>{$data["ExtName"]}</td>";//分機名稱
-            echo "<td>{$data["OffNetCli"]}</td>";//手動撥號主叫
-            echo "<td>$ip</td>";
-            echo "<td><label class='switch'><input id='switch' disabled type='checkbox' " .//class='bootstrap-switch' readonly
-                ($data["StartRecorder"] ? "checked" : "") .
-                " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
-            echo "<td>" . $data["CalloutGroupID"] . "</td>";
-            echo "<td>";//.$data["Suspend"].";
-            echo "<label class='switch'><input id='switch'  disabled type='checkbox' " .//class='bootstrap-switch'
-                ($data["Suspend"] == 0 ? "checked" : "") .
-                " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
-            echo "<td><label class='switch'><input id='switch'  disabled type='checkbox' " .//class='bootstrap-switch'
-                ($data["ETime"] && date_format($data["ETime"], 'Y-m-d H:i:s') > date("Y-m-d H:i:s",
-                    time()) ? "checked" : "") .
-                " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
-            if ($can_switch_extension) {
-                echo "<td><label class='switch'><input id='switch'  disabled type='checkbox' " .//class='bootstrap-switch'
-                    ($data["UseState"] == 1 ? "checked" : "") .
-                    " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
-            }
-            echo "<td>" . $data["PingTime"] . "</td>";
-            echo "</tr>";
+          }
+          echo "<tr redirect='{$url}'>"; //
+          if ($choice_id == "root") {
+            echo "<td><input type='checkbox' name='delete[]' value='{$userId},{$extensionNo}'/></td>";
+          }
+          echo "<td>" . $i++ . "</td>";
+          echo "<td>{$userId}</td>"; //用戶
+          echo "<td>{$extensionNo}</td>"; //分機
+          echo "<td>{$data["ExtName"]}</td>"; //分機名稱
+          echo "<td>{$data["OffNetCli"]}</td>"; //手動撥號主叫
+          echo "<td>$ip</td>";
+          echo "<td><label class='switch'><input id='switch' disabled type='checkbox' " . //class='bootstrap-switch' readonly
+            ($data["StartRecorder"] ? "checked" : "") .
+            " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
+          echo "<td>" . $data["CalloutGroupID"] . "</td>";
+          echo "<td>"; //.$data["Suspend"].";
+          echo "<label class='switch'><input id='switch'  disabled type='checkbox' " . //class='bootstrap-switch'
+            ($data["Suspend"] == 0 ? "checked" : "") .
+            " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
+          echo "<td><label class='switch'><input id='switch'  disabled type='checkbox' " . //class='bootstrap-switch'
+            ($data["ETime"] && date_format($data["ETime"], 'Y-m-d H:i:s') > date(
+              "Y-m-d H:i:s",
+              time()
+            ) ? "checked" : "") .
+            " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
+          if ($can_switch_extension) {
+            echo "<td><label class='switch'><input id='switch'  disabled type='checkbox' " . //class='bootstrap-switch'
+              ($data["UseState"] == 1 ? "checked" : "") .
+              " data-size='mini' data-off-color='danger'><div class='slider round'></div></label></td>";
+          }
+          echo "<td>" . $data["PingTime"] . "</td>";
+          // 錄音下載
+          echo "<td>";
+          if (file_exists($filePath)) {
+            echo "<button type='button' onclick='download({$extensionNo})' class='btn btn-info'>下載</button>";
+          }
+          echo "</td>";
+          echo "</tr>";
         }
         ?>
-        </tbody>
-      </table>
-        <?php
-    }
-    echo Html::formEnd();
-    ?>
+      </tbody>
+    </table>
+  <?php
+  }
+  echo Html::formEnd();
+  ?>
 </div>
+<script>
+  function download(extensionNo) {
+    window.open(ctrl_uri + "downloadExtensionVoice?extensionNo=" + extensionNo)
+  }
+</script>
 <?php
 $this->partialView($bottom_view_path);
 ?>
