@@ -20,22 +20,22 @@
 
     <script>
         var base_url = "<?php echo $base["url"] ?>";
-        var folder = "<?php echo $base["folder"]?>";
-        var apiUrl = "<?php echo getApiUrl('')?>";
-        var downloaderUrl = "<?php echo getDownloaderUrl('')?>";
-        var controller = "<?php echo $this->controller?>";
+        var folder = "<?php echo $base["folder"] ?>";
+        var apiUrl = "<?php echo getApiUrl('') ?>";
+        var downloaderUrl = "<?php echo getDownloaderUrl('') ?>";
+        var controller = "<?php echo $this->controller ?>";
         var ctrl_uri = folder + controller + "/";
-        var action = "<?php echo $this->action?>";
-        var choice = "<?php echo $choice_id?>";
-        var isRoot = <?php echo $isRoot ? 'true' : 'false'?>;
-        var isLoginRoot = <?php echo $model->session['login']['UserID'] == 'root' ? 'true' : 'false'?>;
+        var action = "<?php echo $this->action ?>";
+        var choice = "<?php echo $choice_id ?>";
+        var isRoot = <?php echo $isRoot ? 'true' : 'false' ?>;
+        var isLoginRoot = <?php echo $model->session['login']['UserID'] == 'root' ? 'true' : 'false' ?>;
 
         // if (isLoginRoot) {
         //   apiUrl = '//125.227.84.247:8099/'
         //   downloaderUrl = '//125.227.84.247:8099/'
         // }
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             <?php
             if ($model->warning != "") {
@@ -52,7 +52,7 @@
                 "padding-bottom": 15
             });
 
-            $("#menu-toggle").click(function (e) {
+            $("#menu-toggle").click(function(e) {
                 e.preventDefault();
                 $("#wrapper").toggleClass("toggled");
             });
@@ -64,7 +64,7 @@
 
             $(".reboot_btn").confirm({
                 text: "確定要重啟?",
-                confirm: function (button) {
+                confirm: function(button) {
                     location.href = base_url + 'index/reboot'
                 },
                 post: true,
@@ -76,7 +76,7 @@
 
             $(".shotdown_btn").confirm({
                 text: "確定要關機?",
-                confirm: function (button) {
+                confirm: function(button) {
                     location.href = base_url + 'index/shotdown'
                 },
                 post: true,
@@ -96,48 +96,43 @@
 
 <body>
 
-<nav id="header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" id="drop_btn" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar eye-protector-processed"
-                      style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
-                <span class="icon-bar eye-protector-processed"
-                      style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
-                <span class="icon-bar eye-protector-processed"
-                      style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
-            </button>
-            <a class="navbar-brand" id="menu-toggle" style="cursor:pointer">電訪系統</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
-            <div class="navbar-right">
-                <div class="navbar-form navbar-text navbar-left text-primary">
-                    <?php
-                    echo Html::selector($model->empSelect);
-                    ?>
-                </div>
-                <ul class="nav navbar-nav navbar-left">
-                    <li><a href="<?php echo $base["url"] . "index/index" ?>">首頁</a></li>
-                    <!--<li><a href="<?php echo $base["url"] . "index/service" ?>">服務</a></li>-->
-                    <?php if ($isRoot){ ?>
-                    <li><a class="shotdown_btn" href="javascript:;">關機</a><?php } ?>
-                        <!-- -->
-                        <?php if ($isRoot){ ?>
-                    <li><a class="reboot_btn" href="javascript:;">重啟</a><?php } ?>
-                    <li><a href="<?php echo $base["url"] . "index/password" ?>">密碼</a></li>
-                    <li><a href="<?php echo $base["url"] . "index/logout" ?>">登出</a></li>
-                </ul>
+    <nav id="header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" id="drop_btn" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar eye-protector-processed" style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
+                    <span class="icon-bar eye-protector-processed" style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
+                    <span class="icon-bar eye-protector-processed" style="transition: background 0.3s ease; background-color: rgb(193, 230, 198);"></span>
+                </button>
+                <a class="navbar-brand" id="menu-toggle" style="cursor:pointer">電訪系統</a>
             </div>
+            <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+                <div class="navbar-right">
+                    <div class="navbar-form navbar-text navbar-left text-primary">
+                        <?php
+                        echo Html::selector($model->empSelect);
+                        ?>
+                    </div>
+                    <ul class="nav navbar-nav navbar-left">
+                        <li><a href="<?php echo $base["url"] . "index/index" ?>">首頁</a></li>
+                        <!--<li><a href="<?php echo $base["url"] . "index/service" ?>">服務</a></li>-->
+                        <?php if ($isRoot) { ?>
+                            <li><a class="shotdown_btn" href="javascript:;">關機</a><?php } ?>
+                            <!-- -->
+                            <?php if ($isRoot) { ?>
+                            <li><a class="reboot_btn" href="javascript:;">重啟</a><?php } ?>
+                            <li><a href="<?php echo $base["url"] . "index/password" ?>">密碼</a></li>
+                            <li><a href="<?php echo $base["url"] . "index/logout" ?>">登出</a></li>
+                    </ul>
+                </div>
 
+            </div>
         </div>
-    </div>
-</nav>
-<div id="wrapper">
-    <div id="sidebar-wrapper">
-        <?php echo $this->menu->CreateMenu($model->permission, $choice_id); ?>
-    </div>
-    <div id="page-content-wrapper">
-        <div id="main-content" class="container-fluid">
-
+    </nav>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <?php echo $this->menu->CreateMenu($model->permission, $choice_id); ?>
+        </div>
+        <div id="page-content-wrapper">
+            <div id="main-content" class="container-fluid">

@@ -7,7 +7,6 @@ class Bundle
 
     public function __construct()
     {
-
     }
 
     static private $bundle = array(
@@ -28,6 +27,7 @@ class Bundle
         ),
         "default" => array(
             "~/public/js/common.js",
+            "~/public/js/mintme.js",
             "~/public/css/common.css"
         ),
         "datetime" => array(
@@ -35,9 +35,9 @@ class Bundle
             "~/public/css/jquery.datetimepicker.min.css"
         ),
         "reactjs" => array(
-            "~/public/js/react-with-addons-0.14.7.min.js",//"http://fb.me/react-with-addons-0.13.0.min.js",//
-            "~/public/js/react-dom-0.14.7.min.js",//"http://fb.me/react-0.13.0.min.js",//
-            "~/public/js/JSXTransformer-0.13.0.js"//"http://fb.me/JSXTransformer-0.13.0.js",//
+            "~/public/js/react-with-addons-0.14.7.min.js", //"http://fb.me/react-with-addons-0.13.0.min.js",//
+            "~/public/js/react-dom-0.14.7.min.js", //"http://fb.me/react-0.13.0.min.js",//
+            "~/public/js/JSXTransformer-0.13.0.js" //"http://fb.me/JSXTransformer-0.13.0.js",//
         ),
         "alertify" => array(
             "~/public/css/alertify.core.css",
@@ -77,28 +77,24 @@ class Bundle
         global $config; //= new setting\Config();
 
         $result = "";
-        $ver = "?ver=".$config->base["version"];
+        $ver = "?ver=" . $config->base["version"];
 
-        foreach(self::$bundle[$linkKey] as $file)
-        {
-            $file = str_replace("~/", $config->base["folder"] ,$file);
+        foreach (self::$bundle[$linkKey] as $file) {
+            $file = str_replace("~/", $config->base["folder"], $file);
             $ext = end(explode('.', $file));
-            switch(strtolower($ext))
-            {
+            switch (strtolower($ext)) {
                 case "js":
-                    $result .= "<script src=\"". $file . $ver ."\"></script>\n";
+                    $result .= "<script src=\"" . $file . $ver . "\"></script>\n";
                     break;
                 case "jsx":
-                    $result .= "<script src=\"". $file ."\" type=\"text/jsx\"></script>\n";
+                    $result .= "<script src=\"" . $file . "\" type=\"text/jsx\"></script>\n";
                     break;
                 case "css":
-                    $result .= "<link rel='stylesheet' type='text/css' href='". $file . $ver ."'/>\n";
+                    $result .= "<link rel='stylesheet' type='text/css' href='" . $file . $ver . "'/>\n";
                     break;
             }
         }
         self::$allLink .= $result;
-//        return $result;
+        //        return $result;
     }
 }
-
-?>
